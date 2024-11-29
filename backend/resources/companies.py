@@ -16,6 +16,6 @@ class CompanyProjectsResource(Resource):
     def get(self, id):
         company = Company.query.get(id)
         if not company:
-            return {'message': 'Company not found'}, 404
+            return {'message': '未找到公司 (Company not found)'}, 404
         projects = company.projects
         return project_schema.dump(projects), 200
