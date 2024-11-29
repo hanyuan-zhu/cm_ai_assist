@@ -2,9 +2,10 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 
 export default function LoginPage() {
   const [username, setUsername] = useState('')
@@ -55,6 +56,14 @@ export default function LoginPage() {
             </Button>
           </form>
         </CardContent>
+        <CardFooter className="flex justify-center">
+          <p className="text-sm text-gray-600">
+            还没有账号？ 
+            <Link href="/register" className="text-blue-600 hover:underline ml-1">
+              立即注册
+            </Link>
+          </p>
+        </CardFooter>
       </Card>
     </div>
   )

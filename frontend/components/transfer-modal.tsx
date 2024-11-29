@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { toast } from "@/components/ui/use-toast"
 
 export function TransferModal({ isOpen, onClose, employee }) {
   const [newCompany, setNewCompany] = useState('')
@@ -12,16 +13,44 @@ export function TransferModal({ isOpen, onClose, employee }) {
   const [projects, setProjects] = useState([])
 
   useEffect(() => {
-    // TODO: Fetch companies and projects from API
+    // TODO: Fetch companies from API
     setCompanies(['公司A', '公司B', '公司C'])
-    setProjects(['项目X', '项目Y', '项目Z'])
   }, [])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (newCompany) {
+      // TODO: Fetch projects for the selected company from API
+      setProjects(
+        newCompany === '公司A' ? ['项目X', '项目Y'] :
+        newCompany === '公司B' ? ['项目Z', '项目W'] :
+        ['项目V', '项目U']
+      )
+    } else {
+      setProjects([])
+    }
+  }, [newCompany])
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: Implement transfer logic
-    console.log('Transferring employee:', { employee, newCompany, newProject, effectiveDate })
-    onClose()
+    try {
+      // TODO: Implement actual transfer logic here
+      console.log('Transferring employee:', { employee, newCompany, newProject, effectiveDate })
+      
+      // Simulating an API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      toast({
+        title: "调岗申请提交成功",
+        description: `${employee.name}的调岗申请已成功提交。`,
+      })
+      onClose()
+    } catch (error) {
+      toast({
+        title: "调岗申请提交失败",
+        description: "发生错误，请稍后重试。",
+        variant: "destructive",
+      })
+    }
   }
 
   if (!employee) return null
@@ -43,7 +72,7 @@ export function TransferModal({ isOpen, onClose, employee }) {
               ))}
             </SelectContent>
           </Select>
-          <Select onValueChange={setNewProject}>
+          <Select onValueChange={setNewProject} disabled={!newCompany}>
             <SelectTrigger>
               <SelectValue placeholder="选择新项目" />
             </SelectTrigger>

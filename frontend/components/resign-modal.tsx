@@ -2,15 +2,32 @@ import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { toast } from "@/components/ui/use-toast"
 
 export function ResignModal({ isOpen, onClose, employee }) {
   const [resignDate, setResignDate] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: Implement resignation logic
-    console.log('Employee resigning:', { employee, resignDate })
-    onClose()
+    try {
+      // TODO: Implement actual resignation logic
+      console.log('Employee resigning:', { employee, resignDate })
+      
+      // Simulating an API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      toast({
+        title: "离职申请提交成功",
+        description: `${employee.name}的离职申请已成功提交。`,
+      })
+      onClose()
+    } catch (error) {
+      toast({
+        title: "离职申请提交失败",
+        description: "发生错误，请稍后重试。",
+        variant: "destructive",
+      })
+    }
   }
 
   if (!employee) return null
