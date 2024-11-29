@@ -55,7 +55,7 @@
 
 ##### SQLAlchemy ORM
 
-SQLAlchemy 是一个对象关系映射（ORM，Object-Relational Mapping）库，它的主要作用是将数据库表（database tables）映射为 Python 对象，使得我们可以用面向对象的方式操作数据库。
+SQLAlchemy 是一个对象关系映射（ORM，Object-Relational Mapping）库，它的**主要作用**是<u>**将数据库表（database tables）映射为 Python 对象**</u>，使得我们可以用面向对象的方式操作数据库。
 
 - **数据库表（database tables）**：存储在数据库中的数据结构。
 - **Python 对象（Python objects）**：在 Python 代码中使用的类（classes）和实例（instances）。
@@ -82,91 +82,9 @@ class User(db.Model):
 这个 `User` 类对应数据库中的 `users` 表。我们可以通过创建 `User` 类的实例来插入数据，通过查询 `User` 类来获取数据。
 
 #### Marshmallow 序列化/反序列化
-Marshmallow 是一个用于对象序列化（serialization）和反序列化（deserialization）的库。它的主要作用是将 Python 对象转换为 JSON 格式（序列化），以及将 JSON 格式的数据转换为 Python 对象（反序列化）。
-- 序列化（serialization）：将 Python 对象转换为 JSON 格式，便于传输。
-- 反序列化（deserialization）：将 JSON 格式的数据转换为 Python 对象，便于处理。
-例如，在 `schemas/user_schema.py` 中定义的 `UserSchema` 模式（schema）：
-
-```python
-from marshmallow import Schema, fields
-
-class UserSchema(Schema):
-    id = fields.Int(dump_only=True)
-    username = fields.Str(required=True)
-    password = fields.Str(required=True, load_only=True)
-```
-
-这个 `UserSchema` 类定义了如何将 `User` 对象转换为 JSON 格式，以及如何将 JSON 格式的数据转换为 `User` 对象。
-
-### 使用示例
-假设我们有一个用户模型 `User`，我们需要定义一个模式来序列化和反序列化用户数据。
-
-#### 1. 定义用户模型
-在 `models/user.py` 文件中定义用户模型：
-
-```python
-from backend.extensions import db
-
-class User(db.Model):
-    __tablename__ = 'users'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(120), nullable=False)
-```
-#### 2. 定义用户模式
-在 `schemas/user_schema.py` 文件中定义用户模式：
-
-```python
-
-from marshmallow import Schema, fields
-
-class UserSchema(Schema):
-    id = fields.Int(dump_only=True)
-    username = fields.Str(required=True)
-    password = fields.Str(required=True, load_only=True)
-```
-#### 3. 初始化模式
-在 `schemas/__init__.py` 文件中初始化模式：
-
-```python
-from .user_schema import UserSchema
-
-user_schema = UserSchema()
-users_schema = UserSchema(many=True)
-```
-#### 4. 使用模式进行序列化和反序列化
-在 `resources/auth.py` 文件中使用模式进行序列化和反序列化：
-
-```python
-
-from flask_restful import Resource, reqparse
-from backend.models.user import User
-from backend.extensions import db
-from backend.schemas import user_schema
-
-class RegisterResource(Resource):
-    def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('username', required=True, help='用户名是必需的')
-        parser.add_argument('password', required=True, help='密码是必需的')
-        args = parser.parse_args()
-        
-        if User.query.filter_by(username=args['username']).first():
-            return {'message': '用户名已存在'}, 400
-        
-        user = User(username=args['username'], password=args['password'])
-        db.session.add(user)
-        db.session.commit()
-        
-        user_data = user_schema.dump(user)
-        return {'message': '用户注册成功', 'user': user_data}, 201
-```
-
-### 序列化和反序列化的作用
-
-#### 序列化
-目的：将后端的Python对象转换为JSON格式，以便通过HTTP协议传输给前端。 使用场景：当后端需要将数据发送给前端时，例如返回用户信息、列表数据等。 示例：将一个 User 对象转换为JSON格式的字符串。
+Marshmallow 是一个用于对象序列化（serialization）和反序列化（deserialization）的库。它的**主要作用**是将<u>**Python 对象转换为 JSON 格式（序列化）**</u>，以及将 JSON 格式的数据转换为 Python 对象（反序列化）。
+###### 序列化
+目的：将**后端的Python对象转换为JSON格式，以便通过HTTP协议传输给前端**。 使用场景：当后端需要将数据发送给前端时，例如返回用户信息、列表数据等。 示例：将一个 User 对象转换为JSON格式的字符串。
 
 ```python
 from backend.schemas import user_schema
@@ -177,7 +95,7 @@ user_data = user_schema.dump(user)
 # {"id": 1, "username": "zhang_san"}
 ```
 
-#### 反序列化
+###### 反序列化
 目的：将前端发送的JSON格式数据转换为后端的Python对象，以便进行处理和存储。 使用场景：当后端接收到前端发送的数据时，例如用户注册、登录等操作。 示例：将一个JSON格式的字符串转换为 User 对象。
 
 
@@ -188,3 +106,5 @@ json_data = '{"username": "zhang_san", "password": "my_password123"}'
 user_data = user_schema.loads(json_data)
 user = User(**user_data)
 ```
+
+

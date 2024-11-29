@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity,get_jwt
 from backend.models.user import User
 from backend.extensions import db, jwt_blacklist
 
@@ -243,6 +243,6 @@ class RegisterResource(Resource):
 class LogoutResource(Resource):
     @jwt_required()
     def post(self):
-        jti = get_jwt_identity()
+        jti = get_jwt()['jti']
         jwt_blacklist.add(jti)
         return {'success': True, 'message': 'Logged out successfully'}, 200

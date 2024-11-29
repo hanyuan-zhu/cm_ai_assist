@@ -14,7 +14,7 @@ parser = reqparse.RequestParser()
 parser.add_argument('name', required=True, help='Name is required.')
 parser.add_argument('position', required=True, help='Position is required.')
 parser.add_argument('hire_date', required=True, help='Hire date is required.', type=lambda x: datetime.strptime(x, '%Y-%m-%d').date())
-parser.add_argument('company_id', required=True, type=int)
+parser.add_argument('company_id', type=int)
 parser.add_argument('project_id', type=int)
 
 class ActiveEmployeesResource(Resource):
