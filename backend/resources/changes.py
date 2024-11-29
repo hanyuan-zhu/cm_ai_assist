@@ -11,7 +11,7 @@ change_schema = ChangeSchema()
 changes_schema = ChangeSchema(many=True)
 
 parser = reqparse.RequestParser()
-parser.add_argument('type', required=True, help='Type is required.')
+parser.add_argument('type', required=True, help='类型是必需的 (Type is required)')
 parser.add_argument('employee_id', required=True, type=int)
 parser.add_argument('from_company_id', type=int)
 parser.add_argument('to_company_id', type=int)
@@ -30,22 +30,21 @@ class ApproveChangeResource(Resource):
     def put(self, id):
         change = ChangeRequest.query.get(id)
         if not change:
-            return {'message': 'Change request not found'}, 404
+            return {'message': '未找到变更请求 (Change request not found)'}, 404
         if change.status != '待确认':
-            return {'message': 'Change request already processed'}, 400
-        # 处理变动逻辑
+            return {'message': '变更请求已处理 (Change request already processed)'}, 400
         change.status = '已确认'
         db.session.commit()
-        return {'success': True, 'message': 'Change request approved'}, 200
+        return {'success': True, 'message': '变更请求已批准 (Change request approved)'}, 200
 
 class RejectChangeResource(Resource):
     @jwt_required()
     def put(self, id):
         change = ChangeRequest.query.get(id)
         if not change:
-            return {'message': 'Change request not found'}, 404
+            return {'message': '未找到变更请求 (Change request not found)'}, 404
         if change.status != '待确认':
-            return {'message': 'Change request already processed'}, 400
+            return {'message': '变更请求已处理 (Change request already processed)'}, 400
         change.status = '已拒绝'
         db.session.commit()
-        return {'success': True, 'message': 'Change request rejected'}, 200
+        return {'success': True, 'message': '变更请求已拒绝 (Change request rejected)'}, 200

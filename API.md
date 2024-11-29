@@ -58,14 +58,19 @@
   - **参数:** 无
   - **返回:** `changes` (array)
     - 每个变动对象包含以下字段：
-      - `id` (string)
+      - `id` (int)
       - `type` (string): `'入职'`, `'离职'`, `'调岗'`
-      - `name` (string)
-      - `fromCompany` (string | null)
-      - `toCompany` (string | null)
-      - `fromProject` (string | null)
-      - `toProject` (string | null)
-      - `effectiveDate` (string): 格式 `YYYY-MM-DD`
+      - `employee_id` (int)
+      - `employee_name` (string)
+      - `from_company_id` (int | null)
+      - `from_company_name` (string | null)
+      - `to_company_id` (int | null)
+      - `to_company_name` (string | null)
+      - `from_project_id` (int | null)
+      - `from_project_name` (string | null)
+      - `to_project_id` (int | null)
+      - `to_project_name` (string | null)
+      - `effective_date` (string): 格式 `YYYY-MM-DD`
       - `status` (string): `'待确认'`, `'已确认'`, `'已拒绝'`
 
 ### 3. 员工管理相关

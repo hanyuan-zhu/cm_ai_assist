@@ -102,7 +102,7 @@ class LoginResource(Resource):
             """
             return {'token': token, 'user': {'id': user.id, 'username': user.username}}, 200
         else:
-            return {'message': 'Invalid credentials'}, 401
+            return {'message': '无效的凭据 (Invalid credentials)'}, 401
 
 class RegisterResource(Resource):
     """

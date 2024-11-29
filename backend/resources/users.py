@@ -11,5 +11,5 @@ class UserMeResource(Resource):
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
         if not user:
-            return {'message': 'User not found'}, 404
+            return {'message': '未找到用户 (User not found)'}, 404
         return user_schema.dump(user), 200
