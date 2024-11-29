@@ -14,8 +14,6 @@ parser = reqparse.RequestParser()
 parser.add_argument('name', required=True, help='Name is required.')
 parser.add_argument('position', required=True, help='Position is required.')
 parser.add_argument('hire_date', required=True, help='Hire date is required.', type=lambda x: datetime.strptime(x, '%Y-%m-%d').date())
-parser.add_argument('company_id', type=int)
-parser.add_argument('project_id', type=int)
 
 class ActiveEmployeesResource(Resource):
     """
@@ -43,21 +41,20 @@ class AddEmployeeResource(Resource):
     def post(self):
         args = parser.parse_args()
         user_id = get_jwt_identity()
-        company = Company.query.get(args['company_id'])
-        if not company:
-            return {'message': 'Company not found'}, 404
-        project = Project.query.get(args['project_id']) if args['project_id'] else None
-        if project and project.company_id != args['company_id']:
-            return {'message': 'Project does not belong to the specified company'}, 400
+        
+        # 创建新员工对象
+        # 刚入职的员工，只需要提供姓名，岗位和入职时间，默认待岗，所以这里没有公司和项目信息。
         employee = Employee(
             name=args['name'],
             position=args['position'],
             hire_date=args['hire_date'],
             status='待岗',
-            company_id=args['company_id'],
-            project_id=args['project_id'],
             creator_id=user_id
         )
+        
+        # 将新员工对象添加到数据库会话
         db.session.add(employee)
         db.session.commit()
+        
+        # 返回新员工对象的序列化数据
         return employee_schema.dump(employee), 201
