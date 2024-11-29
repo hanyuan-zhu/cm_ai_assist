@@ -18,8 +18,23 @@ parser.add_argument('company_id', type=int)
 parser.add_argument('project_id', type=int)
 
 class ActiveEmployeesResource(Resource):
+    """
+    ActiveEmployeesResource类，用于处理获取在岗和待岗员工列表的请求
+
+    方法:
+    - get: 处理GET请求，返回在岗和待岗员工列表
+    """
     @jwt_required()
     def get(self):
+        """
+        处理GET请求，返回在岗和待岗员工列表
+
+        工作流程:
+        1. 使用JWT认证确保请求合法
+        2. 查询状态为'在岗'或'待岗'的员工
+        3. 使用EmployeeSchema将查询结果序列化为JSON格式
+        4. 返回序列化数据和200状态码
+        """
         employees = Employee.query.filter(Employee.status.in_(['在岗', '待岗'])).all()
         return employees_schema.dump(employees), 200
 

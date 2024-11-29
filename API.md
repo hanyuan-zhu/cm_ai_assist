@@ -46,8 +46,10 @@
       - `id` (string)
       - `name` (string)
       - `position` (string)
-      - `company` (string)
-      - `project` (string)
+      - `company_id` (int)
+      - `company_name` (string)
+      - `project_id` (int)
+      - `project_name` (string)
       - `status` (string): `'在岗'`, `'待岗'`, `'离职'`
       - `hireDate` (string): 格式 `YYYY-MM-DD`
 
