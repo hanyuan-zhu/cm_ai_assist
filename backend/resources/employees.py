@@ -5,6 +5,7 @@ from backend.models.company import Company
 from backend.models.project import Project
 from backend.extensions import db
 from schemas.employee_schema import EmployeeSchema
+import datetime
 
 employee_schema = EmployeeSchema()
 employees_schema = EmployeeSchema(many=True)
