@@ -1,4 +1,4 @@
-from backend.models import db
+from extensions import db
 from sqlalchemy import Column, Integer, String, ForeignKey, Date
 from sqlalchemy.orm import relationship
 
@@ -62,8 +62,7 @@ class Employee(db.Model):
          employee = Employee.query.get(1)
          print(employee.company.name)  # 输出关联的公司名称
 
-    示例2：
-        - 假设你有以下数据：
+      - 假设你有以下数据：
         公司：Company(id=1, name='Company A')
         项目：Project(id=1, name='Project A', company_id=1)
         员工：Employee(id=1, name='Employee 1', company_id=1, project_id=1)

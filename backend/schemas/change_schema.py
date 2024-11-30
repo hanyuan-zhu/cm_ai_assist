@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields
-from backend.models.employee import Employee
-from backend.models.company import Company
-from backend.models.project import Project
+from models.employee import Employee
+from models.company import Company
+from models.project import Project
 
 class ChangeSchema(Schema):
     """

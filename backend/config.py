@@ -40,13 +40,11 @@
 
 """
 
-import os
-# 其他代码...
 
-import os
+# import os
 
-# 获取当前文件所在目录的绝对路径
-basedir = os.path.abspath(os.path.dirname(__file__))
+# # 获取当前文件所在目录的绝对路径
+# basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     """配置类: 包含应用的所有配置项

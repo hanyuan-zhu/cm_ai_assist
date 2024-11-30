@@ -167,10 +167,10 @@ def create_app():
     """
 
     
-    # 创建所有数据库表
-    # 使用应用上下文确保在正确的环境中创建表
-    with app.app_context():
-        db.create_all()
+    # # 创建所有数据库表
+    # # 使用应用上下文确保在正确的环境中创建表
+    # with app.app_context():
+    #     db.create_all()
     return app
     """
     Flask应用上下文(Application Context)详细说明

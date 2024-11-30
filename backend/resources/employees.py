@@ -1,10 +1,10 @@
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from backend.models.employee import Employee
-from backend.models.company import Company
-from backend.models.project import Project
-from backend.models.change_request import ChangeRequest  # 新增导入
-from backend.extensions import db
+from models.employee import Employee
+from models.company import Company
+from models.project import Project
+from models.change_request import ChangeRequest  # 新增导入
+from extensions import db
 from schemas.employee_schema import EmployeeSchema
 from schemas.change_schema import ChangeSchema  # 新增导入
 from datetime import datetime  # 修正datetime导入

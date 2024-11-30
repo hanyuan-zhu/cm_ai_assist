@@ -1,4 +1,4 @@
-from backend.models import db
+from extensions import db
 from sqlalchemy import Column, Integer, String, ForeignKey, Date
 from sqlalchemy.orm import relationship
 

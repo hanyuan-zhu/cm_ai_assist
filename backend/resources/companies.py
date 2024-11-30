@@ -1,6 +1,6 @@
 from flask_restful import Resource
-from backend.models.company import Company
-from backend.models.project import Project
+from models.company import Company
+from models.project import Project
 from schemas.company_schema import CompanySchema
 from schemas.project_schema import ProjectSchema
 
