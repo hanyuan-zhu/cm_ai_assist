@@ -6,11 +6,12 @@
   - app.py: Flask应用的入口文件，包含应用的创建和配置。
   - config.py: 配置文件，包含数据库URI、密钥等配置信息。
   - extensions.py: 扩展文件，初始化Flask扩展（如SQLAlchemy、Flask-RESTful、JWT等）。
+  - init_db.py: 初始化数据库的脚本，包含创建数据库和初始化数据的逻辑。
   - models/
     - __init__.py: 初始化文件，导入所有模型。
     - change_request.py: 变动请求模型，定义了员工调岗、离职等变动请求的表结构。
     - company.py: 公司模型，定义了公司的表结构。
-    - employee.py: 员工模型p，定义了员工的表结构。
+    - employee.py: 员工模型，定义了员工的表结构。
     - project.py: 项目模型，定义了项目的表结构。
     - user.py: 用户模型，定义了用户的表结构。
   - resources/
@@ -29,9 +30,9 @@
     - user_schema.py: 用户模式，定义了用户的序列化和反序列化规则。
   - tests/
     - test_api.py: API测试文件，包含对各个API的测试用例。
-- README.md
-
-## 目录说明
+  - data/
+    - initial_data.json: 初始化数据文件，包含公司和项目的初始数据。
+- README.md## 目录说明
 
 ### models 目录
 模型文件，定义了数据库表结构和ORM模型。
