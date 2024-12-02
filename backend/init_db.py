@@ -1,7 +1,7 @@
 import json
 import os
 from app import create_app
-from models import Company, Project
+from modules.company import Company, Project
 from extensions import db
 from sqlalchemy_utils import database_exists, create_database
 from sqlalchemy.engine.url import URL, make_url

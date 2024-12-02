@@ -13,7 +13,7 @@ app.py - Flask应用程序的入口文件
 from flask import Flask  # Flask是Web框架,用于创建Web应用
 from config import Config  # 导入配置文件,包含数据库URL等设置
 from extensions import db, api, jwt,jwt_blacklist  # 导入需要的Flask扩展
-from resources import initialize_routes  # 导入API路由初始化函数
+from routes import initialize_routes  # 导入API路由初始化函数
 from flask_jwt_extended import JWTManager
 
 def create_app():
