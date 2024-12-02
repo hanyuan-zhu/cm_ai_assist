@@ -15,32 +15,39 @@
   - config.py: 配置文件，包含数据库URI、密钥等配置信息。
   - extensions.py: 扩展文件，初始化Flask扩展（如SQLAlchemy、Flask-RESTful、JWT等）。
   - init_db.py: 初始化数据库的脚本，包含创建数据库和初始化数据的逻辑。
-  - models/
-    - __init__.py: 初始化文件，导入所有模型。
-    - change_request.py: 变动请求模型，定义了员工调岗、离职等变动请求的表结构。
-    - company.py: 公司模型，定义了公司的表结构。
-    - employee.py: 员工模型，定义了员工的表结构。
-    - project.py: 项目模型，定义了项目的表结构。
-    - user.py: 用户模型，定义了用户的表结构。
-  - resources/
-    - __init__.py: 初始化文件，导入并初始化所有资源。
-    - auth.py: 认证资源，包含登录、注册和登出功能。
-    - changes.py: 变动资源，包含获取待确认变动、批准变动、拒绝变动等功能。
-    - companies.py: 公司资源，包含获取公司列表、获取公司项目列表等功能。
-    - employees.py: 员工资源，包含获取在岗员工列表、添加新员工等功能。
-    - users.py: 用户资源，包含获取当前登录用户信息的功能。
-  - schemas/
-    - __init__.py: 初始化文件，导入所有模式。
-    - change_schema.py: 变动模式，定义了变动请求的序列化和反序列化规则。
-    - company_schema.py: 公司模式，定义了公司的序列化和反序列化规则。
-    - employee_schema.py: 员工模式，定义了员工的序列化和反序列化规则。
-    - project_schema.py: 项目模式，定义了项目的序列化和反序列化规则。
-    - user_schema.py: 用户模式，定义了用户的序列化和反序列化规则。
+  - modules/
+    - auth/
+      - __init__.py: 初始化文件，导入所有认证相关的模块。
+      - models.py: 用户模型，定义了用户的表结构。
+      - resources.py: 认证资源，包含登录、注册和登出功能。
+      - schemas.py: 用户模式，定义了用户的序列化和反序列化规则。
+      - routes.py: 认证相关的路由配置。
+    - company/
+      - __init__.py: 初始化文件，导入所有公司相关的模块。
+      - models.py: 公司模型，定义了公司的表结构。
+      - resources.py: 公司资源，包含获取公司列表、获取公司项目列表等功能。
+      - schemas.py: 公司模式，定义了公司的序列化和反序列化规则。
+      - routes.py: 公司相关的路由配置。
+    - employee/
+      - __init__.py: 初始化文件，导入所有员工相关的模块。
+      - models.py: 员工模型，定义了员工的表结构。
+      - resources.py: 员工资源，包含获取在岗员工列表、添加新员工等功能。
+      - schemas.py: 员工模式，定义了员工的序列化和反序列化规则。
+      - routes.py: 员工相关的路由配置。
+    - change/
+      - __init__.py: 初始化文件，导入所有变动相关的模块。
+      - models.py: 变动请求模型，定义了员工调岗、离职等变动请求的表结构。
+      - resources.py: 变动资源，包含获取待确认变动、批准变动、拒绝变动等功能。
+      - schemas.py: 变动模式，定义了变动请求的序列化和反序列化规则。
+      - routes.py: 变动相关的路由配置。
+  - routes.py: 初始化所有模块的路由配置。
   - tests/
     - test_api.py: API测试文件，包含对各个API的测试用例。
   - data/
     - initial_data.json: 初始化数据文件，包含公司和项目的初始数据。
 - README.md
+
+
 
 ## 三、功能模块说明
 
