@@ -1,6 +1,6 @@
 from .auth import LoginResource, RegisterResource, LogoutResource
-from .employees import ActiveEmployeesResource, AddEmployeeResource, EmployeeTransferResource, EmployeeResignResource
-from .changes import PendingChangesResource, ApproveChangeResource, RejectChangeResource
+from .employees import ActiveEmployeesResource, AddEmployeeResource
+from .changes import PendingChangesResource, ApproveChangeResource, RejectChangeResource, EmployeeTransferResource, EmployeeResignResource
 from .companies import CompaniesResource, CompanyProjectsResource
 from .users import UserMeResource
 
@@ -11,9 +11,9 @@ def initialize_routes(api):
     
     api.add_resource(ActiveEmployeesResource, '/api/active-employees')
     api.add_resource(AddEmployeeResource, '/api/employees')
-    api.add_resource(EmployeeTransferResource, '/api/employees/<int:id>/transfer')
-    api.add_resource(EmployeeResignResource, '/api/employees/<int:id>/resign')
     
+    api.add_resource(EmployeeTransferResource, '/api/pending-changes/<int:id>/transfer')
+    api.add_resource(EmployeeResignResource, '/api/pending-changes/<int:id>/resign')
     api.add_resource(PendingChangesResource, '/api/pending-changes')
     api.add_resource(ApproveChangeResource, '/api/pending-changes/<int:id>/approve')
     api.add_resource(RejectChangeResource, '/api/pending-changes/<int:id>/reject')

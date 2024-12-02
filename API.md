@@ -80,17 +80,17 @@
   - **参数:** `name` (string), `position` (string), `hireDate` (string): 格式 `YYYY-MM-DD`
   - **返回:** `success` (boolean), `employee` (object): 与GET /api/active-employees返回的员工对象相同
 
-- **PUT /api/employees/{id}/transfer**
+### 4. 变动管理相关
+
+- **PUT /api/pending-changes/{id}/transfer**
   - **描述:** 提交员工调岗申请。
   - **参数:** `newCompany` (string), `newProject` (string), `effectiveDate` (string): 格式 `YYYY-MM-DD`
   - **返回:** `success` (boolean), `message` (string)
 
-- **PUT /api/employees/{id}/resign**
+- **PUT /api/pending-changes/{id}/resign**
   - **描述:** 提交员工离职申请。
   - **参数:** `resignDate` (string): 格式 `YYYY-MM-DD`
   - **返回:** `success` (boolean), `message` (string)
-
-### 4. 变动管理相关
 
 - **PUT /api/pending-changes/{id}/approve**
   - **描述:** 确认变动申请。

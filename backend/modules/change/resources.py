@@ -1,11 +1,10 @@
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models.change_request import ChangeRequest
-from models.employee import Employee
-from models.company import Company
-from models.project import Project
+from .models import ChangeRequest
+from modules.employee import Employee
+# from modules.company import Company, Project
 from extensions import db
-from schemas.change_schema import ChangeSchema
+from .schemas import ChangeSchema
 from datetime import datetime
 
 # 创建 ChangeSchema 实例，用于序列化和反序列化 ChangeRequest 对象

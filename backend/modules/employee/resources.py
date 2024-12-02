@@ -1,10 +1,9 @@
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models.employee import Employee
-from models.company import Company
-from models.project import Project
+from .models import Employee
+from modules.company import Company,Project
 from extensions import db
-from schemas.employee_schema import EmployeeSchema
+from .schemas import EmployeeSchema
 from datetime import datetime  # 修正datetime导入
 
 employee_schema = EmployeeSchema()
