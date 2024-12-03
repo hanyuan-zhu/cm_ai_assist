@@ -12,9 +12,12 @@ app.py - Flask应用程序的入口文件
 
 from flask import Flask  # Flask是Web框架,用于创建Web应用
 from config import Config  # 导入配置文件,包含数据库URL等设置
-from extensions import db, api, jwt,jwt_blacklist  # 导入需要的Flask扩展
+from extensions import db, jwt,jwt_blacklist  # 导入需要的Flask扩展
 from routes import initialize_routes  # 导入API路由初始化函数
 from flask_jwt_extended import JWTManager
+from flask_restful import Api
+import logging # 引入日志模块，测试用
+
 
 def create_app():
     """
@@ -100,132 +103,23 @@ def create_app():
     # 初始化各种Flask扩展
     # 这些扩展为应用添加额外功能：
     db.init_app(app)   # SQLAlchemy：数据库操作能力
-    api.init_app(app)  # Flask-RESTful：REST API支持
+    # api.init_app(app)  # Flask-RESTful：REST API支持
     jwt.init_app(app)  # JWT：用户认证功能
+    
+    
+    # 在此处初始化 Api 对象，直接传入 app
+    api = Api(app)
     
     # 注册所有API路由
     # 设置所有的API端点（URLs）
-    initialize_routes(api)
+    initialize_routes(api,app)
     
-    # 注册一个回调函数，用于检查JWT是否在黑名单中
-    """
-    JWT黑名单检查回调函数：
-    1. @jwt.token_in_blocklist_loader：装饰器，用于注册回调函数
-    2. check_if_token_in_blacklist：回调函数，检查JWT是否在黑名单中
-    3. jwt_header：JWT的头部信息
-    4. jwt_payload：JWT的负载信息
-    5. jti：JWT的唯一标识符（JWT ID）
-    6. 返回值：如果jti在黑名单中，返回True；否则返回False
-
-    类比：
-    - 就像门禁系统检查黑名单
-    - 如果某人（jti）在黑名单中，禁止进入
-    """
-
     @jwt.token_in_blocklist_loader
     def check_if_token_in_blacklist(jwt_header, jwt_payload):
         jti = jwt_payload['jti']
         return jti in jwt_blacklist
-    """
-    JWT黑名单机制详解：
 
-    1. 用户登录：
-        - 用户登录成功后，服务器生成一个JWT并返回给用户。
-
-    2. 用户访问受保护资源：
-        - 用户在请求头中携带JWT访问受保护的API端点。
-        - Flask-JWT-Extended 会自动验证JWT的有效性。
-
-    3. 调用黑名单检查回调：
-        - 在验证JWT时，Flask-JWT-Extended 会调用通过 @jwt.token_in_blocklist_loader 注册的回调函数 check_if_token_in_blacklist。
-        - 该函数检查JWT的唯一标识符（JTI）是否在黑名单中。
-
-    4. 处理验证结果：
-        - 如果JWT不在黑名单中，验证通过，用户请求被处理。
-        - 如果JWT在黑名单中，验证失败，返回相应的错误响应。
-
-    5. jwt_blacklist 的存储：
-        - jwt_blacklist 保存在 extensions.py 中，用于存储所有已注销的JWT。
-
-    6. 用户登出：
-        - Logout API（在 auth.py 中）会将JWT的JTI添加到 jwt_blacklist 中，使得该JWT失效。
-
-    7. 使用 @jwt_required() 装饰器的资源：
-        - 当一个资源使用了 @jwt_required() 装饰器时，Flask-JWT-Extended 会在处理请求时自动进行以下步骤：
-            7.1. 验证JWT的有效性：
-                - 检查JWT的签名是否正确。
-                - 检查JWT是否过期。
-            7.2. 调用黑名单检查回调：
-                - 调用通过 @jwt.token_in_blocklist_loader 注册的回调函数 check_if_token_in_blacklist。
-                - 该回调函数会检查JWT的唯一标识符（JTI）是否在黑名单中。
-
-    总结：
-    - 用户登录后会获得一个JWT，用于访问受保护的资源。
-    - 每次访问受保护资源时，JWT都会被验证，并调用黑名单检查回调函数。
-    - 如果JWT在黑名单中，访问请求会被拒绝。
-    - 用户登出时，JWT的JTI会被添加到黑名单中，确保该JWT无法再使用。
-    """
-
-    
-    # # 创建所有数据库表
-    # # 使用应用上下文确保在正确的环境中创建表
-    # with app.app_context():
-    #     db.create_all()
     return app
-    """
-    Flask应用上下文(Application Context)详细说明
-
-    什么是上下文？
-    想象你在一个大型办公楼里工作：
-    - 上下文就像是你的办公室环境
-    - 不同部门(应用)有不同的门禁卡(配置)和办公用品(资源)
-    - 你需要在正确的办公室里才能使用该部门的资源
-
-    with app.app_context(): 具体做什么：
-    1. 进入办公室：
-    - 刷门禁卡进入特定办公室(创建应用上下文)
-    - 获得使用办公设备的权限(访问应用资源的权限)
-
-    2. 工作过程：
-    - 可以使用办公室里的所有设备(应用的所有资源)
-    - 比如打印机(数据库)、文件柜(配置)等
-
-    3. 离开办公室：
-    - 自动关灯、锁门(清理资源)
-    - 交还临时使用的设备(释放资源)
-
-    实际例子：
-    """
-    """
-        # 错误示例 - 没有上下文
-        db.create_all()  # ❌ 报错：RuntimeError: No application context
-
-        # 正确示例 - 使用上下文
-        with app.app_context():    # 创建一个安全的工作环境
-            db.create_all()       # ✅ 在正确的环境中创建数据库表
-    """ 
-    """
-    常见使用场景：
-
-    # 1. 数据库操作
-    with app.app_context():
-        # 创建新用户
-        new_user = User(username="张三")
-        db.session.add(new_user)
-        db.session.commit()
-
-    # 2. 访问配置
-    with app.app_context():
-        # 获取配置信息
-        secret_key = app.config['SECRET_KEY']
-
-    # 3. 后台任务
-    def background_job():
-        with app.app_context():
-            # 在这里执行需要应用上下文的操作
-            process_data()
-    """
-
 
 # 当直接运行此文件时（而不是作为模块导入时）
 if __name__ == '__main__':

@@ -26,7 +26,7 @@ Flask-RESTful 是一个扩展，用于快速构建REST API：
 - 我们定义好每个资源的行为
 - 它帮我们处理请求和响应
 """
-api = Api()
+# api = Api()
 
 # 初始化JWT管理器
 """

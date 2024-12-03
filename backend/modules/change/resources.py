@@ -25,12 +25,6 @@ class PendingChangesResource(Resource):
     """
     PendingChangesResource 类，用于处理获取待确认变动名单的请求
 
-    方法:
-    - get: 处理 GET 请求，返回待确认变动名单
-    """
-    @jwt_required()
-    def get(self):
-        """
         处理 GET 请求，返回待确认变动名单
 
         工作流程:
@@ -38,10 +32,14 @@ class PendingChangesResource(Resource):
         2. 查询状态为 '待确认' 的变动请求
         3. 使用 ChangeSchema 将查询结果序列化为 JSON 格式
         4. 返回序列化数据和 200 状态码
-        """
-        changes = ChangeRequest.query.filter_by(status='待确认').all()
-        return changes_schema.dump(changes), 200
-
+    """
+    @jwt_required()
+    def get(self):
+        try:
+            changes = ChangeRequest.query.filter_by(status='待确认').all()
+            return {'changes': changes_schema.dump(changes)}, 200
+        except Exception as e:
+            return {'message': f'获取待确认变动名单时出错: {str(e)}'}, 500
  
 class EmployeeTransferResource(Resource):
     """
@@ -52,11 +50,6 @@ class EmployeeTransferResource(Resource):
     - 创建调岗变动记录
     - 返回处理结果
     
-    工作流程类比：
-    - 就像员工提交调岗申请表：
-      * 填写当前部门和目标部门
-      * 注明预期生效日期
-      * 提交给人事部门审批
     """
 
     @jwt_required()  # JWT令牌（token）验证装饰器（decorator）
@@ -67,9 +60,6 @@ class EmployeeTransferResource(Resource):
         参数（Parameters）:
         - id: 员工ID（从URL路径获取）
         
-        返回（Returns）:
-        - 成功：{'success': True, 'message': '调岗申请已提交'}, 200
-        - 失败：{'message': '未找到员工'}, 404
         """
         
         # 1. 创建参数解析器（argument parser）
@@ -80,9 +70,9 @@ class EmployeeTransferResource(Resource):
         - 提供清晰的错误提示
         """
         parser = reqparse.RequestParser()
-        parser.add_argument('newCompany', required=True, help='新公司ID是必需的')
-        parser.add_argument('newProject', required=True, help='新项目ID是必需的')
-        parser.add_argument('effectiveDate', required=True, help='生效日期是必需的')
+        parser.add_argument('new_company', required=True, help='新公司ID是必需的')
+        parser.add_argument('new_project', required=True, help='新项目ID是必需的')
+        parser.add_argument('effective_date', required=True, help='生效日期是必需的')
         
         # 2. 解析请求参数
         """
@@ -102,40 +92,45 @@ class EmployeeTransferResource(Resource):
         employee = Employee.query.get(id)
         if not employee:
             return {'message': '未找到员工'}, 404
+        
+        try:
+            # 4. 创建调岗变动请求（Change Request）
+            """
+            变动请求记录包含：
+            - 变动类型：'调岗'
+            - 员工信息：employee_id
+            - 原公司和项目：from_company_id, from_project_id
+            - 新公司和项目：to_company_id, to_project_id
+            - 生效日期：effective_date
+            - 状态：'待确认'
+            """
+            change = ChangeRequest(
+                type='调岗',
+                employee_id=employee.id,
+                from_company_id=employee.company_id,
+                to_company_id=args['new_company'],
+                from_project_id=employee.project_id,
+                to_project_id=args['new_project'],
+                effective_date=datetime.strptime(args['effective_date'], '%Y-%m-%d').date(),
+                status='待确认',
+                creator_id=user_id  # 添加创建者ID
+            )
             
-        # 4. 创建调岗变动请求（Change Request）
-        """
-        变动请求记录包含：
-        - 变动类型：'调岗'
-        - 员工信息：employee_id
-        - 原公司和项目：from_company_id, from_project_id
-        - 新公司和项目：to_company_id, to_project_id
-        - 生效日期：effective_date
-        - 状态：'待确认'
-        """
-        change = ChangeRequest(
-            type='调岗',
-            employee_id=employee.id,
-            from_company_id=employee.company_id,
-            to_company_id=args['newCompany'],
-            from_project_id=employee.project_id,
-            to_project_id=args['newProject'],
-            effective_date=datetime.strptime(args['effectiveDate'], '%Y-%m-%d').date(),
-            status='待确认',
-            creator_id=user_id  # 添加创建者ID
-        )
+            # 5. 保存到数据库
+            db.session.add(change)
+            db.session.commit()
+            
+            # 6. 返回成功响应
+            return {
+                "success": True,
+                "message": "调岗申请已提交"
+            }, 200
         
-        # 5. 保存到数据库
-        """
-        数据库事务（Database Transaction）：
-        - add()：将变动请求添加到数据库会话
-        - commit()：提交更改到数据库
-        """
-        db.session.add(change)
-        db.session.commit()
-        
-        # 6. 返回成功响应
-        return {'success': True, 'message': '调岗申请已提交'}, 200
+        except Exception as e:
+            # 错误处理
+            return {
+                "message": f"提交调岗申请时出错: {str(e)}"
+            }, 500
 
 class EmployeeResignResource(Resource):
     """
@@ -167,7 +162,7 @@ class EmployeeResignResource(Resource):
         
         # 1. 创建参数解析器
         parser = reqparse.RequestParser()
-        parser.add_argument('resignDate', required=True, help='离职日期是必需的')
+        parser.add_argument('resign_date', required=True, help='离职日期是必需的')
         
         # 2. 解析请求参数
         args = parser.parse_args()
@@ -183,61 +178,38 @@ class EmployeeResignResource(Resource):
         employee = Employee.query.get(id)
         if not employee:
             return {'message': '未找到员工'}, 404
+        
+        try:
+            # 4. 创建离职变动请求
+            """
+            创建离职变动记录：
+            - 记录当前员工所属公司和项目
+            - 设置变动类型为'离职'
+            - 记录预计离职日期
+            - 初始状态设为'待确认'
+            """
+            change = ChangeRequest(
+                type='离职',
+                employee_id=employee.id,
+                from_company_id=employee.company_id,
+                from_project_id=employee.project_id,
+                effective_date=datetime.strptime(args['resign_date'], '%Y-%m-%d').date(),
+                status='待确认',
+                creator_id=user_id  # 添加创建者ID
+            )
             
-        # 4. 创建离职变动请求
-        """
-        创建离职变动记录：
-        - 记录当前员工所属公司和项目
-        - 设置变动类型为'离职'
-        - 记录预计离职日期
-        - 初始状态设为'待确认'
-        """
-        change = ChangeRequest(
-            type='离职',
-            employee_id=employee.id,
-            from_company_id=employee.company_id,
-            from_project_id=employee.project_id,
-            effective_date=datetime.strptime(args['resignDate'], '%Y-%m-%d').date(),
-            status='待确认',
-            creator_id=user_id  # 添加创建者ID
-
-        )
+            # 5. 保存到数据库
+            db.session.add(change)
+            db.session.commit()
+            
+            # 6. 返回成功响应
+            return {'success': True, 'message': '离职申请已提交'}, 200
         
-        # 5. 保存到数据库
-        """
-        保存变动请求：
-        - 将新建的变动请求添加到数据库会话
-        - 提交变更到数据库
-        """
-        db.session.add(change)
-        db.session.commit()
-        
-        # 6. 返回成功响应
-        return {'success': True, 'message': '离职申请已提交'}, 200
-
-"""
-使用示例（Usage Examples）：
-
-1. 提交调岗申请：
-PUT /api/employees/1/transfer
-Content-Type: application/json
-Authorization: Bearer <JWT_TOKEN>
-
-{
-    "newCompany": 2,
-    "newProject": 3,
-    "effectiveDate": "2024-03-20"
-}
-
-2. 提交离职申请：
-PUT /api/employees/1/resign
-Content-Type: application/json
-Authorization: Bearer <JWT_TOKEN>
-
-{
-    "resignDate": "2024-04-01"
-}
-"""
+        except Exception as e:
+            # 错误处理
+            return {
+                "message": f"提交离职申请时出错: {str(e)}"
+            }, 500
 
 class ApproveChangeResource(Resource):
     """

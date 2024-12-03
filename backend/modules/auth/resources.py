@@ -35,6 +35,7 @@ reqparse的作用：
 parser = reqparse.RequestParser()
 parser.add_argument('username', required=True, help='用户名是必需的 (Username is required)')
 parser.add_argument('password', required=True, help='密码是必需的 (Password is required).')
+
 class LoginResource(Resource):
     def post(self):
         # 解析请求参数
@@ -43,8 +44,9 @@ class LoginResource(Resource):
            - 使用 reqparse 解析请求中的 `username` 和 `password` 参数
            - 如果缺少必需字段会自动返回错误
         """
+        print("LoginResource POST method called")
         args = parser.parse_args()
-        
+        print(f"Parsed args: {args}")
         # 查询用户
         """
         2. 查询用户：
@@ -136,9 +138,9 @@ class RegisterResource(Resource):
            - 检查并提取请求中的用户名和密码
            - 如果缺少必需字段会自动返回错误
         """
-
+        print("LoginResource POST method called")
         args = parser.parse_args()
-        
+        print(f"Parsed args: {args}")
         try:
             # 检查用户名是否已存在
             """
