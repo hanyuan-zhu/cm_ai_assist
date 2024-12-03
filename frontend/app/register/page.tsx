@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { toast } from "@/components/ui/use-toast"
+import { register } from '@/lib/api'
 
 export default function RegisterPage() {
   const [username, setUsername] = useState('')
@@ -25,17 +26,16 @@ export default function RegisterPage() {
       return
     }
     try {
-      // TODO: Implement actual registration logic here
-      console.log('Registering with', { username, password })
-      
-      // Simulating an API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      toast({
-        title: "注册成功",
-        description: "您的账号已成功创建。",
-      })
-      router.push('/login')
+      const res = await register(username, password)
+      if (res.success) {
+        toast({
+          title: "注册成功",
+          description: "您的账号已成功创建。",
+        })
+        router.push('/login')
+      } else {
+        throw new Error(res.message)
+      }
     } catch (error) {
       toast({
         title: "注册失败",

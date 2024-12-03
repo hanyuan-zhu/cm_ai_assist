@@ -7,14 +7,34 @@ import { EmployeeList } from '@/components/employee-list'
 import { AddEmployeeModal } from '@/components/add-employee-modal'
 import { PendingChangesList } from '@/components/pending-changes-list'
 import { LogoutButton } from '@/components/logout-button'
+import { getCurrentUser } from '@/lib/api'
+import { User } from '@/lib/types'
+import { useRouter } from 'next/navigation'
+import { toast } from "@/components/ui/use-toast"
 
 export default function DashboardPage() {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState<User | null>(null)
   const [isAddEmployeeModalOpen, setIsAddEmployeeModalOpen] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
-    // TODO: Fetch user data from API
-    setUser({ name: '张三', role: '总公司管理员' })
+    // 直接从 localStorage 获取用户信息
+    const userStr = localStorage.getItem('user')
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr)
+        setUser(user)
+      } catch (error) {
+        toast({ 
+          title: "获取用户信息失败", 
+          description: "用户信息格式错误", 
+          variant: "destructive" 
+        })
+        router.push('/login')
+      }
+    } else {
+      router.push('/login')
+    }
   }, [])
 
   if (!user) return <div>Loading...</div>
@@ -23,7 +43,7 @@ export default function DashboardPage() {
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold">欢迎，{user.name}！</h1>
+          <h1 className="text-2xl font-bold">欢迎，{user.username}！</h1>
           <p className="text-gray-600">{user.role}</p>
         </div>
         <div className="flex items-center gap-4">

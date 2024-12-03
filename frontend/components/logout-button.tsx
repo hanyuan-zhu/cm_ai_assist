@@ -15,27 +15,43 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { toast } from "@/components/ui/use-toast"
+import { logout } from '@/lib/api' // 导入 logout 函数
 
 export function LogoutButton() {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false)
   const router = useRouter()
 
   const handleLogout = async () => {
-    try {
-      // TODO: Implement actual logout logic here (e.g., clear session, tokens, etc.)
-      await new Promise(resolve => setTimeout(resolve, 1000)) // Simulating an API call
-      
-      toast({
-        title: "登出成功",
-        description: "您已成功退出登录。",
-      })
-      router.push('/login')
-    } catch (error) {
+    const token = localStorage.getItem('token')
+    if (!token) {
       toast({
         title: "登出失败",
-        description: "发生错误，请稍后重试。",
+        description: "未找到认证信息，请重新登录。",
         variant: "destructive",
       })
+      return
+    }
+
+    try {
+      const res = await logout(token)
+      if (res.success) {
+        localStorage.removeItem('token')
+        toast({
+          title: "登出成功",
+          description: "您已成功退出登录。",
+        })
+        router.push('/login')
+      } else {
+        throw new Error(res.message || "未知错误")
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast({
+          title: "登出失败",
+          description: error.message || "发生错误，请稍后重试。",
+          variant: "destructive",
+        })
+      }
     }
   }
 

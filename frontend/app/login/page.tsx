@@ -6,6 +6,8 @@ import Link from 'next/link'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
+import { toast } from "@/components/ui/use-toast"
+import { login } from '@/lib/api'
 
 export default function LoginPage() {
   const [username, setUsername] = useState('')
@@ -14,9 +16,38 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: Implement actual login logic here
-    console.log('Logging in with', username, password)
-    router.push('/dashboard')
+    try {
+      const res = await login(username, password)
+      console.log('Login response:', res)
+      
+      if (res.token) { // 直接检查 res.token 而不是 res.success
+        // token 和 user 直接从 res 中获取
+        const { token, user } = res
+        
+        // 保存 token
+        localStorage.setItem('token', token)
+        
+        // 保存用户信息
+        localStorage.setItem('user', JSON.stringify(user))
+
+        toast({
+          title: "登录成功",
+          description: `欢迎，${user.username}！`,
+        })
+
+        // 路由跳转
+        router.push('/dashboard')
+      } else {
+        throw new Error('登录失败：未收到token')
+      }
+    } catch (error) {
+      console.error('Login error:', error)
+      toast({
+        title: "登录失败",
+        description: error instanceof Error ? error.message : "账号或密码错误。",
+        variant: "destructive",
+      })
+    }
   }
 
   const isFormValid = username.trim() !== '' && password.trim() !== ''

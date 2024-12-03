@@ -17,6 +17,7 @@ from routes import initialize_routes  # 导入API路由初始化函数
 from flask_jwt_extended import JWTManager
 from flask_restful import Api
 import logging # 引入日志模块，测试用
+from flask_cors import CORS
 
 
 def create_app():
@@ -106,7 +107,8 @@ def create_app():
     # api.init_app(app)  # Flask-RESTful：REST API支持
     jwt.init_app(app)  # JWT：用户认证功能
     
-    
+    CORS(app)  # 允许所有来源的跨域请求
+
     # 在此处初始化 Api 对象，直接传入 app
     api = Api(app)
     

@@ -256,6 +256,9 @@ class ApproveChangeResource(Resource):
             employee.company_id = change.to_company_id
             employee.project_id = change.to_project_id
             employee.hire_date = change.effective_date  # 更新 hire_date 为 effective_date
+            # 添加状态更新逻辑
+            if employee.status == '待岗':
+                employee.status = '在岗'
         elif change.type == '离职':
             employee.status = '离职'
             employee.hire_date = change.effective_date  # 更新 hire_date 为 effective_date
