@@ -7,7 +7,6 @@ import { EmployeeList } from '@/components/employee-list'
 import { AddEmployeeModal } from '@/components/add-employee-modal'
 import { PendingChangesList } from '@/components/pending-changes-list'
 import { LogoutButton } from '@/components/logout-button'
-import { getCurrentUser } from '@/lib/api'
 import { User } from '@/lib/types'
 import { useRouter } from 'next/navigation'
 import { toast } from "@/components/ui/use-toast"
@@ -15,6 +14,7 @@ import { toast } from "@/components/ui/use-toast"
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null)
   const [isAddEmployeeModalOpen, setIsAddEmployeeModalOpen] = useState(false)
+  const [refreshKey, setRefreshKey] = useState(0) // 添加共享的刷新状态
   const router = useRouter()
 
   useEffect(() => {
@@ -36,6 +36,11 @@ export default function DashboardPage() {
       router.push('/login')
     }
   }, [])
+
+  // 添加刷新函数
+  const handleRefresh = () => {
+    setRefreshKey(prev => prev + 1)
+  }
 
   if (!user) return <div>Loading...</div>
 
@@ -60,7 +65,7 @@ export default function DashboardPage() {
             <CardTitle>在岗人员名单</CardTitle>
           </CardHeader>
           <CardContent>
-            <EmployeeList />
+            <EmployeeList refreshKey={refreshKey} />
           </CardContent>
         </Card>
 
@@ -69,7 +74,11 @@ export default function DashboardPage() {
             <CardTitle>待确认变动名单</CardTitle>
           </CardHeader>
           <CardContent>
-            <PendingChangesList role={user.role} />
+            <PendingChangesList 
+              role={user.role} 
+              refreshKey={refreshKey} 
+              onChangeConfirmed={handleRefresh}
+            />
           </CardContent>
         </Card>
       </div>

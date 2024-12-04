@@ -15,7 +15,13 @@ import { toast } from "@/components/ui/use-toast"
 import { getPendingChanges, approveChange, rejectChange } from '@/lib/api'
 import { PendingChange } from '@/lib/types'
 
-export function PendingChangesList({ role }: { role: string }) {
+interface PendingChangesListProps {
+  role: string
+  refreshKey: number
+  onChangeConfirmed: () => void
+}
+
+export function PendingChangesList({ role, refreshKey, onChangeConfirmed }: PendingChangesListProps) {
   const [pendingChanges, setPendingChanges] = useState<PendingChange[]>([])
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false)
@@ -53,7 +59,7 @@ export function PendingChangesList({ role }: { role: string }) {
     return () => {
       console.log('Component will unmount');
     };
-  }, [role, refresh]);
+  }, [role, refreshKey]);
 
   const handleConfirm = async () => {
     if (!selectedChange) return
@@ -64,7 +70,8 @@ export function PendingChangesList({ role }: { role: string }) {
           title: "变动已确认",
           description: `${selectedChange.employee_name}的${selectedChange.type}申请已确认。`,
         })
-        setRefresh(prev => prev + 1)
+        onChangeConfirmed() // 调用父组件的刷新函数
+        setPendingChanges(pendingChanges.filter(change => change.id !== selectedChange.id))
       } else {
         throw new Error(res.message)
       }

@@ -8,7 +8,11 @@ import { getActiveEmployees } from '@/lib/api'
 import { Employee } from '@/lib/types'
 import { toast } from "@/components/ui/use-toast"
 
-export function EmployeeList() {
+interface EmployeeListProps {
+  refreshKey: number
+}
+
+export function EmployeeList({ refreshKey }: EmployeeListProps) {
   const [employees, setEmployees] = useState<Employee[]>([])
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
   const [isResignModalOpen, setIsResignModalOpen] = useState(false)
@@ -29,7 +33,7 @@ export function EmployeeList() {
       }
     }
     fetchEmployees()
-  }, [refresh]) // 添加 refresh 依赖
+  }, [refreshKey]) // 添加 refreshKey 依赖
 
   const handleTransfer = (employee: Employee) => {
     setSelectedEmployee(employee)
