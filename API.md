@@ -123,7 +123,7 @@
             "id": 1,
             "name": "张三",
             "position": "开发工程师",
-            "hire_date": "2023-10-01",
+            "efffective_date": "2023-10-01",
             "status": "在岗",
             "company_id": 1,
             "company_name": "Company A",
@@ -135,7 +135,7 @@
             "id": 2,
             "name": "李四",
             "position": "测试工程师",
-            "hire_date": "2023-09-15",
+            "efffective_date": "2023-09-15",
             "status": "待岗",
             "company_id": null,
             "company_name": null,
@@ -157,7 +157,7 @@
       - `id` (int): 员工ID
       - `name` (string): 员工姓名
       - `position` (string): 员工职位
-      - `hire_date` (string): 到岗生效日期，格式 `YYYY-MM-DD`
+      - `efffective_date` (string): 到岗生效日期，格式 `YYYY-MM-DD`
       - `status` (string): 员工状态，可能的值为 `'在岗'`, `'待岗'`, `'离职'`
       - `company_id` (int | null): 所属公司ID
       - `company_name` (string | null): 所属公司名称
@@ -241,7 +241,7 @@
   - **参数:** 
     - `name` (string): 员工姓名
     - `position` (string): 员工职位
-    - `hireDate` (string): 入职日期，格式 `YYYY-MM-DD`
+    - `effectiveDate` (string): 入职日期，格式 `YYYY-MM-DD`
   - **返回:**
     - 成功响应:
       ```json
@@ -250,7 +250,7 @@
           "id": 1,
           "name": "张三",
           "position": "开发工程师",
-          "hire_date": "2023-10-01",
+          "efffective_date": "2023-10-01",
           "status": "待岗",
           "company_id": null,
           "company_name": null,

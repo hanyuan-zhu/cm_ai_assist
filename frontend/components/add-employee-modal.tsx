@@ -8,12 +8,12 @@ import { addEmployee } from '@/lib/api'
 export function AddEmployeeModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
   const [name, setName] = useState('')
   const [position, setPosition] = useState('')
-  const [hireDate, setHireDate] = useState('')
+  const [effectiveDate, setEffectiveDate] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const res = await addEmployee(name, position, hireDate)
+      const res = await addEmployee(name, position, effectiveDate)
       if (res.success) {
         toast({
           title: "员工添加成功",
@@ -54,8 +54,8 @@ export function AddEmployeeModal({ isOpen, onClose }: { isOpen: boolean, onClose
           <Input
             type="date"
             placeholder="入职日期"
-            value={hireDate}
-            onChange={(e) => setHireDate(e.target.value)}
+            value={effectiveDate}
+            onChange={(e) => setEffectiveDate(e.target.value)}
             required
           />
           <Button type="submit">添加</Button>

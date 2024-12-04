@@ -12,11 +12,10 @@ app.py - Flask应用程序的入口文件
 
 from flask import Flask  # Flask是Web框架,用于创建Web应用
 from config import Config  # 导入配置文件,包含数据库URL等设置
-from extensions import db, jwt,jwt_blacklist  # 导入需要的Flask扩展
+from extensions import db, jwt,jwt_blacklist, migrate  # 导入需要的Flask扩展
 from routes import initialize_routes  # 导入API路由初始化函数
 from flask_jwt_extended import JWTManager
 from flask_restful import Api
-import logging # 引入日志模块，测试用
 from flask_cors import CORS
 
 
@@ -104,7 +103,10 @@ def create_app():
     # 初始化各种Flask扩展
     # 这些扩展为应用添加额外功能：
     db.init_app(app)   # SQLAlchemy：数据库操作能力
-    # api.init_app(app)  # Flask-RESTful：REST API支持
+    
+    # 初始化迁移
+    migrate.init_app(app, db)
+
     jwt.init_app(app)  # JWT：用户认证功能
     
     CORS(app)  # 允许所有来源的跨域请求

@@ -11,7 +11,7 @@ export interface Employee {
   id: number
   name: string
   position: string
-  hire_date: string
+  efffective_date: string
   status: string
   company_id: number | null
   company_name: string | null

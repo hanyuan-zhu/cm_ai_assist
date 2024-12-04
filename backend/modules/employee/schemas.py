@@ -8,7 +8,7 @@ class EmployeeSchema(Schema):
     - id: 员工ID
     - name: 员工姓名
     - position: 员工职位
-    - hire_date: 入职日期
+    - efffective_date: 入职日期
     - status: 员工状态
     - company_id: 所属公司ID
     - company_name: 所属公司名称（通过get_company_name方法获取）
@@ -19,7 +19,7 @@ class EmployeeSchema(Schema):
     id = fields.Int(dump_only=True)
     name = fields.Str()
     position = fields.Str()
-    hire_date = fields.Date()
+    efffective_date = fields.Date()
     status = fields.Str()
     company_id = fields.Int()
     company_name = fields.Method("get_company_name")

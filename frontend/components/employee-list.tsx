@@ -65,7 +65,7 @@ export function EmployeeList({ refreshKey }: EmployeeListProps) {
             <div>
               <h3 className="font-semibold">{employee.name}</h3>
               <p className="text-sm text-muted-foreground">
-                入职日期: {employee.hire_date}
+                入职日期: {employee.efffective_date}
               </p>
             </div>
 

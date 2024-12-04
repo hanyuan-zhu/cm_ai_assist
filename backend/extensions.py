@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
-from flask_restful import Api
 from flask_jwt_extended import JWTManager
-
+from flask_migrate import Migrate
+migrate = Migrate()
 # 初始化SQLAlchemy对象
 """
 SQLAlchemy 是一个ORM（对象关系映射）库：

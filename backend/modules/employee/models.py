@@ -10,7 +10,7 @@ class Employee(db.Model):
     - id: 员工ID，主键
     - name: 员工姓名
     - position: 员工职位
-    - hire_date: 入职日期
+    - efffective_date: 生效日期（到岗公司时间）
     - status: 员工状态（在岗、待岗、离职）
     - company_id: 所属公司ID，外键
     - project_id: 所属项目ID，外键
@@ -28,7 +28,7 @@ class Employee(db.Model):
     position = Column(db.String(64))
     
     # 定义入职日期列，日期类型
-    hire_date = Column(db.Date)
+    efffective_date = Column(db.Date)
     
     # 定义员工状态列，字符串类型，默认值为'待岗'
     status = Column(db.String(16), default='待岗')
@@ -82,7 +82,7 @@ class Employee(db.Model):
         #     'id': 1,
         #     'name': 'Employee 1',
         #     'position': None,
-        #     'hire_date': None,
+        #     'efffective_date': None,
         #     'status': '待岗',
         #     'company_id': 1,
         #     'company_name': 'Company A',

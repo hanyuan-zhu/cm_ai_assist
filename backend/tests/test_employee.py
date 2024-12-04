@@ -79,7 +79,7 @@ def test_add_employee(client, auth_headers):
     new_employee = {
         'name': '测试员工',
         'position': '开发工程师',
-        'hire_date': '2023-10-01'
+        'efffective_date': '2023-10-01'
     }
     response = client.post('/api/employees', json=new_employee, headers=auth_headers)
     print(response.data)  # 打印响应数据
@@ -87,5 +87,5 @@ def test_add_employee(client, auth_headers):
     assert response.status_code == 201
     assert response.json['employee']['name'] == new_employee['name']
     assert response.json['employee']['position'] == new_employee['position']
-    assert response.json['employee']['hire_date'] == new_employee['hire_date']
+    assert response.json['employee']['efffective_date'] == new_employee['efffective_date']
     assert response.json['employee']['status'] == '待岗'

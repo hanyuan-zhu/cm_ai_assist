@@ -32,7 +32,7 @@ class ActiveEmployeesResource(Resource):
 parser = reqparse.RequestParser()
 parser.add_argument('name', required=True, help='Name is required.')
 parser.add_argument('position', required=True, help='Position is required.')
-parser.add_argument('hire_date', required=True, help='Hire date is required.', type=lambda x: datetime.strptime(x, '%Y-%m-%d').date())
+parser.add_argument('efffective_date', required=True, help='Hire date is required.', type=lambda x: datetime.strptime(x, '%Y-%m-%d').date())
 
 
 class AddEmployeeResource(Resource):
@@ -56,7 +56,7 @@ class AddEmployeeResource(Resource):
             employee = Employee(
                 name=args['name'],
                 position=args['position'],
-                hire_date=args['hire_date'],  # 使用解析后的日期字段
+                efffective_date=args['efffective_date'],  # 使用解析后的日期字段
                 status='待岗',
                 creator_id=user_id
             )

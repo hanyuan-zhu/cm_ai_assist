@@ -80,14 +80,14 @@ export async function getPendingChanges(): Promise<{ changes: PendingChange[] }>
   return data; // 直接返回 { changes: [...] }
 }
 
-export async function addEmployee(name: string, position: string, hireDate: string): Promise<ApiResponse<Employee>> {
+export async function addEmployee(name: string, position: string, effectiveDate: string): Promise<ApiResponse<Employee>> {
   const response = await fetchWithAuth(`${API_BASE}/employees`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       name,
       position,
-      hire_date: hireDate
+      efffective_date: effectiveDate
     })
   })
   return response.json()

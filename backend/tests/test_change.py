@@ -109,7 +109,7 @@ def test_submit_transfer_request(client, auth_headers, initialize_data):
     new_employee = {
         'name': '测试员工',
         'position': '开发工程师',
-        'hire_date': '2023-10-01'
+        'efffective_date': '2023-10-01'
     }
     add_response = client.post('/api/employees', json=new_employee, headers=auth_headers)
     assert add_response.status_code == 201
@@ -136,7 +136,7 @@ def test_submit_resign_request(client, auth_headers, initialize_data):
     new_employee = {
         'name': '测试员工',
         'position': '开发工程师',
-        'hire_date': '2023-10-01'
+        'efffective_date': '2023-10-01'
     }
     add_response = client.post('/api/employees', json=new_employee, headers=auth_headers)
     assert add_response.status_code == 201
@@ -161,7 +161,7 @@ def test_approve_change_request(client, auth_headers, initialize_data):
     new_employee = {
         'name': '测试员工',
         'position': '开发工程师',
-        'hire_date': '2023-10-01'
+        'efffective_date': '2023-10-01'
     }
     add_response = client.post('/api/employees', json=new_employee, headers=auth_headers)
     assert add_response.status_code == 201
@@ -192,7 +192,7 @@ def test_reject_change_request(client, auth_headers, initialize_data):
     new_employee = {
         'name': '测试员工',
         'position': '开发工程师',
-        'hire_date': '2023-10-01'
+        'efffective_date': '2023-10-01'
     }
     add_response = client.post('/api/employees', json=new_employee, headers=auth_headers)
     assert add_response.status_code == 201
